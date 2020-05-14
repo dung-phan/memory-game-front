@@ -57,7 +57,6 @@ export default {
         return response.json();
       })
       .then(data => {
-        console.log(data);
         this.randomNumbs = data.randomNumbs;
         this.gameId = data.id;
       });
@@ -65,12 +64,10 @@ export default {
 
   methods: {
     startGame() {
-      console.log("game started");
       const board = Array.from(
         document.getElementsByClassName("card open show disabled")
       );
       const back = Array.from(document.getElementsByClassName("back"));
-      console.log("ha", board);
 
       board.map(card => {
         return (card.className = "card");
@@ -80,15 +77,11 @@ export default {
       });
     },
     flipCard(index) {
-      console.log("got clicked");
       this.selectedIndex = index;
-      console.log("check", this.selectedIndex);
       this.userAnswerArray.push(Number(this.selectedIndex));
       if (this.userAnswerArray.length > this.randomNumbs.length) {
         return this.userAnswerArray;
       }
-
-      console.log("check user", this.userAnswerArray);
     },
     checkWin() {
       this.$http
@@ -96,7 +89,6 @@ export default {
           userAnswer: this.userAnswerArray
         })
         .then(response => {
-          console.log("check win", response.body.winCheck);
           this.winStatus = response.body.winCheck;
           const result = document.getElementById("popup");
           if (this.winStatus || !this.winStatus) {
