@@ -46,7 +46,7 @@ The front-end is designed with Vue and styled with CSS.
 
 3. Run the app:
    ```
-   $ npm run run dev
+   $ npm run dev
    ```
 
 ## Improvements
