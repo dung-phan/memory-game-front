@@ -46,7 +46,7 @@ The front-end is designed with Vue and styled with CSS.
 
 3. Run the app:
    ```
-   $ npm run run dev
+   $ npm run dev
    ```
 
 ## Improvements
@@ -59,4 +59,4 @@ The front-end is designed with Vue and styled with CSS.
 2. Have an option to undo their moves
 3. Replay the games that they lost.
 4. Increase the level of difficulty based on their last performances (which can be done in the back-end)
-# memory-game-front
+
