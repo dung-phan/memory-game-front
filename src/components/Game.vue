@@ -92,7 +92,7 @@ export default {
     checkWin() {
       this.gameId = this.$store.state.game.game.id;
       this.$http
-        .put(`http://memory-game-back.herokuapp.com/end/${this.gameId}`, {
+        .put(`https://memory-game-back.herokuapp.com/end/${this.gameId}`, {
           userAnswer: this.userAnswerArray
         })
         .then(response => {

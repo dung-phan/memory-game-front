@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "http://memory-game-back.herokuapp.com";
+const baseUrl = "https://memory-game-back.herokuapp.com";
 //const baseUrl = "http://localhost:4000";
 const state = {
   game: {},
