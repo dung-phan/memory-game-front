@@ -31,7 +31,7 @@ h1 {
     "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   letter-spacing: -0.049375rem;
-  font-size: 5rem;
+  font-size: 5.5rem;
   line-height: 5.0555555556rem;
   margin-top: 4.3333333333rem;
   margin-bottom: 1.4444444444rem;

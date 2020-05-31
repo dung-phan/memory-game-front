@@ -34,14 +34,14 @@ export default {
 }
 .wrapper-left {
   float: left;
-  width: 40.6666666665%;
+  width: 37.6666666665%;
   margin-left: 8.3333333333%;
 }
 .wrapper-right {
   float: left;
-  width: 44.9999999998%;
+  width: 47.9999999998%;
 }
 .memory-game {
-  margin-top: 20px;
+  margin-top: 3rem;
 }
 </style>
