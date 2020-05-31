@@ -19,7 +19,7 @@ export default {};
   background-color: #ffffff;
 }
 body {
-  margin: 3rem;
+  margin: 0;
   padding: 0;
   box-sizing: border-box;
   overflow-x: hidden;
@@ -55,7 +55,7 @@ p {
   color: #6d6d6d;
 }
 hr {
-  height: 0.8rem;
+  height: 0.5rem;
   background-size: 100% 1.4444444444rem;
   background-image: linear-gradient(135deg, #90f1ee 0%, #67d5d1 100%);
   width: 100px;
@@ -70,7 +70,7 @@ button {
   color: #ffffff;
   padding: 10px 0;
   min-width: 300px;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
   font-size: 20px;
   background: linear-gradient(135deg, #90f1ee 0%, #84d4d2 80%);
   border: none;
@@ -82,7 +82,9 @@ button:hover {
   box-shadow: 0px 7px 26px 0px rgba(0, 0, 0, 0.23);
   transform: scale3d(1.03, 1.03, 1.03);
 }
-
+button:focus {
+  outline: 0;
+}
 li {
   display: inline-block;
   position: relative;

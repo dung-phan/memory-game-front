@@ -18,7 +18,7 @@
 export default {
   methods: {
     choose(gameType) {
-      this.$http.post("http://localhost:4000/start", { gameType: gameType });
+      this.$store.dispatch("startGame", gameType);
       this.$router.push("/game");
     }
   }

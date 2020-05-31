@@ -2,15 +2,15 @@
   <div class="wrapper">
     <div class="header">
       <div class="icon play" @click="startGame">
-        <img src="../assets/play.svg" alt="play" />
+        <img src="../assets/play.svg" alt="play" class="icon-image" />
         <div class="button-text">Play</div>
       </div>
       <div class="icon stop" @click="checkWin">
-        <img src="../assets/stop.svg" alt="stop" />
+        <img src="../assets/stop.svg" alt="stop" class="icon-image" />
         <div class="button-text">Check</div>
       </div>
       <div class="icon history" @click="$router.push('/history')">
-        <img src="../assets/history.svg" alt="history" />
+        <img src="../assets/history.svg" alt="history" class="icon-image" />
         <div class="button-text">History</div>
       </div>
     </div>
@@ -18,7 +18,7 @@
       <ul class="deck floatCenter" id="card-deck">
         <li
           class="card open show disabled"
-          v-for="numb in randomNumbs"
+          v-for="numb in fetchedGame.randomNumbs"
           :key="numb"
           v-bind:class="[selectedIndex == numb ? 'red' : null]"
           @click="flipCard(numb)"
@@ -27,12 +27,16 @@
         </li>
       </ul>
       <div id="popup" class="overlay curtain hidden">
-        <div v-if="winStatus === true" class="box-result">
-          <img src="../assets/win.gif" alt="win" class="win" />
-        </div>
-        <div v-if="winStatus === false" class="box-result">
-          <img src="../assets/lost.gif" alt="lost" class="lost" />
-          <h2>You lost!</h2>
+        <div class="box-result floatCenter">
+          <span class="level" v-if="fetchedGame.randomNumbs.length === 4">LEVEL: Easy</span>
+          <span class="level" v-if="fetchedGame.randomNumbs.length === 8">LEVEL: Medium</span>
+          <span class="level" v-if="fetchedGame.randomNumbs.length === 12">LEVEL: Difficult</span>
+          <div class="sm-break" />
+          <hr class="floatCenter" />
+          <div class="sm-break" />
+          <div class="floatCenter result">Your result:</div>
+          <div v-if="winStatus === true" class="win">Won</div>
+          <div v-if="winStatus === false" class="lost">Lost</div>
         </div>
         <button @click="$router.push('/')">Play again</button>
       </div>
@@ -40,6 +44,8 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
+import { store } from "../store/store";
 export default {
   data() {
     return {
@@ -50,18 +56,13 @@ export default {
       winStatus: null
     };
   },
-  mounted() {
-    this.$http
-      .get("http://localhost:4000/game")
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        this.randomNumbs = data.randomNumbs;
-        this.gameId = data.id;
-      });
+  beforeRouteEnter(to, from, next) {
+    store.dispatch("getGame").then(() => next());
   },
-
+  computed: { ...mapGetters(["fetchedGame"]) },
+  mounted() {
+    this.$store.dispatch("getGame");
+  },
   methods: {
     startGame() {
       const board = Array.from(
@@ -78,18 +79,24 @@ export default {
     },
     flipCard(index) {
       this.selectedIndex = index;
+      const cards = Array.from(document.getElementsByClassName("back"));
+      const selectedCard = cards.filter(
+        card => card.innerHTML == this.selectedIndex
+      );
+      selectedCard[0].style.visibility = "visible";
       this.userAnswerArray.push(Number(this.selectedIndex));
       if (this.userAnswerArray.length > this.randomNumbs.length) {
         return this.userAnswerArray;
       }
     },
     checkWin() {
+      this.gameId = this.$store.state.game.game.id;
       this.$http
-        .put(`http://localhost:4000/end/${this.gameId}`, {
+        .put(`http://memory-game-back.herokuapp.com/end/${this.gameId}`, {
           userAnswer: this.userAnswerArray
         })
         .then(response => {
-          this.winStatus = response.body.winCheck;
+          this.winStatus = response.data.winCheck;
           const result = document.getElementById("popup");
           if (this.winStatus || !this.winStatus) {
             result.className = "overlay curtain show";
@@ -100,18 +107,25 @@ export default {
 };
 </script>
 <style>
+@font-face {
+  font-family: "CombiNumeralsLtd";
+  src: url("../assets/font/CombiNumeralsLtd.otf");
+}
 .header {
-  margin: 10px;
+  padding: 1rem;
+  height: 12vh;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 6px -6px rgba(0, 0, 0, 0.25);
 }
 .icon {
   padding: 0px 30px;
 }
 .icon:hover {
-  transform: translateY(-5px);
-  cursor: pointer;
 }
 .icon.history {
   float: left;
+  text-align: center;
 }
 .icon.play {
   float: left;
@@ -119,7 +133,10 @@ export default {
 .icon.stop {
   float: right;
 }
-
+.icon-image:hover {
+  transform: scale(1.2);
+  cursor: pointer;
+}
 .deck .card.disabled {
   pointer-events: none;
 }
@@ -139,7 +156,7 @@ export default {
   visibility: hidden;
 }
 .red {
-  border: 4px solid #67d5d1;
+  border: 2px solid #67d5d1;
 }
 .overlay {
   position: fixed;
@@ -153,17 +170,25 @@ export default {
 }
 .curtain {
   display: block;
-  background: rgba(10, 19, 29, 0.98);
+  background: rgba(10, 19, 29);
   z-index: 9;
   margin-bottom: 0;
   overflow-y: scroll;
 }
 
 .level-1 {
-  max-width: 100vh;
+  max-width: 90vh;
 }
-.game {
-  width: auto;
+.level {
+  font-family: acumin-pro, Helvetica, Arial, sans-serif;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+  font-size: 16px;
+  background: black;
+  color: white;
+}
+.sm-break {
+  margin-bottom: 2rem;
 }
 .group:after {
   content: "";
@@ -179,7 +204,6 @@ export default {
 .floatCenter {
   margin-left: auto;
   margin-right: auto;
-  padding-top: 2rem;
 }
 .deck .card {
   height: 17vh;
@@ -193,43 +217,43 @@ export default {
   transition: box-shadow 0.3s ease-in-out;
 }
 .back {
-  font-size: 50px;
+  font-size: 80px;
   margin: 0;
   position: absolute;
   top: 50%;
   left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -20%);
+  transform: translate(-50%, -20%);
   color: #67d5d1;
   text-align: center;
-  font-family: "Monoton", "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+  font-family: "CombiNumeralsLtd", "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
     "Open Sans", "Helvetica Neue", sans-serif;
 }
 .button-text {
   font-size: 18px;
   padding-top: 5px;
-  font-weight: 550;
-  letter-spacing: -0.05em;
-  color: #6d6d6d;
+  font-weight: 100;
+  text-transform: uppercase;
+  letter-spacing: -0.06em;
+  color: #9c9c9c;
 }
 .box-result {
-  margin-top: 2rem;
+  margin-top: 3.125rem;
   background: rgba(10, 19, 29, 0.98);
+  text-align: center;
 }
-.box-result .lost {
-  width: 30%;
-  margin: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -35%);
+.box-result .win,
+.lost {
+  font-size: 3rem;
+  padding: 1rem;
+  margin: 2rem;
+  background: rgba(10, 19, 29, 0.98);
+  color: #67d5d1;
 }
-.box-result .win {
-  width: 30%;
-  margin: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -45%);
+
+.result {
+  font-size: 1.2rem;
+  color: white;
+  background: rgba(10, 19, 29, 0.98);
 }
 </style>

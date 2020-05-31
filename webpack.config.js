@@ -11,6 +11,10 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.(woff|woff2|ttf|otf)$/,
+        use: "file-loader?name=fonts/[name].[ext]!static"
+      },
+      {
         test: /\.css$/,
         use: ["vue-style-loader", "css-loader"]
       },
@@ -42,7 +46,10 @@ module.exports = {
     },
     extensions: ["*", ".js", ".vue", ".json"]
   },
-  devServer: {},
+  devServer: {
+    host: "0.0.0.0",
+    port: 8080
+  },
   performance: {
     hints: false
   },

@@ -1,40 +1,39 @@
 <template>
-  <div>
+  <div class="wrapper">
     <div class="grid-container">
       <div class="row head">ID</div>
       <div class="row head">Number of cards</div>
       <div class="row head">Finished</div>
       <div class="row head">Status</div>
     </div>
-    <li v-for="game in games" :key="game.id" class="grid-container">
+    <li v-for="game in fetchedGames" :key="game.id" class="grid-container">
       <div class="row">{{ game.id }}</div>
       <div class="row">{{ game.gameType }} cards</div>
       <div class="row">{{ game.status }}</div>
-      <div class="row" v-if="game.winCheck === true">won</div>
-      <div class="row" v-if="game.winCheck === false">lost</div>
+      <div class="row" v-if="game.winCheck === true">Won</div>
+      <div class="row" v-if="game.winCheck === false">Lost</div>
+      <div class="row" v-if="game.winCheck === null">Not Finished</div>
     </li>
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
       games: []
     };
   },
+  computed: { ...mapGetters(["fetchedGames"]) },
   mounted() {
-    this.$http
-      .get("http://localhost:4000/games")
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        this.games = data;
-      });
+    this.$store.dispatch("getHistory");
   }
 };
 </script>
 <style scoped>
+.wrapper {
+  margin: 2rem;
+}
 .grid-container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
