@@ -18,8 +18,8 @@
 export default {
   methods: {
     choose(gameType) {
-      this.$store.dispatch("startGame", gameType);
       this.$router.push("/game");
+      this.$store.dispatch("startGame", gameType);
     }
   }
 };
